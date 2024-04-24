@@ -1,0 +1,13 @@
+**/.env
+**/node_modules
+**/coverage
+**/dist
+**/build
+**/.DS_Store
+**/_stories
+# Local Netlify folder
+.netlify
+**/settings.*
+**/error.log
+**/storybook-static
+**/_backup

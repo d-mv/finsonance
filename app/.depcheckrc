@@ -1,0 +1,14 @@
+ignores:
+  [
+    "electron-updater",
+    "eslint-config-react-app",
+    "eslint-import-resolver-typescript",
+    "eslint-plugin-node",
+    "@utils/*",
+    "@views/*",
+    "@components/*",
+    "@store/*",
+    "@shared/*",
+    "@renderer/*"
+  ]
+skip-missing: true
