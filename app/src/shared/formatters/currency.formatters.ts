@@ -26,16 +26,24 @@ const MATCH_CURRENCY_FORMATTER = makeMatch(
   (amount: number) => toEuro(amount),
 );
 
-export function toCurrency(amount: number | string, currency = Currency.EUR) {
+function stringOrNumberToNumber(amount: number | string) {
   let arg = amount;
 
   if (typeof arg !== "number") {
     arg = parseFloat(arg);
 
     if (isNaN(arg)) {
-      return "Invalid amount";
+      return -999_999_999;
     }
   }
 
-  return MATCH_CURRENCY_FORMATTER[currency]!(arg);
+  return arg;
+}
+
+export function toCurrency(amount: number | string, currency = Currency.EUR) {
+  return MATCH_CURRENCY_FORMATTER[currency]!(stringOrNumberToNumber(amount));
+}
+
+export function toFinancial(amount: number | string) {
+  return new Intl.NumberFormat("pt-PT").format(stringOrNumberToNumber(amount));
 }

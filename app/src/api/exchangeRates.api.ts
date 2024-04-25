@@ -1,4 +1,4 @@
-import { Action, Context, ExchangeRatesState, setExchangeRates } from "@shared/store";
+import { Action, Context, ExchangeRatesState, setExchangeRates, setIsLoadingById } from "@shared/store";
 import dayjs from "dayjs";
 
 export function getExchangeRates(ctx: Context) {
@@ -7,6 +7,8 @@ export function getExchangeRates(ctx: Context) {
       store,
       services: { LoggerService, ExchangeRatesService, LocalStorageService },
     } = ctx;
+
+    store.dispatch(setIsLoadingById(["exchangeRates", true]));
 
     const logger = new LoggerService();
 
@@ -42,5 +44,6 @@ export function getExchangeRates(ctx: Context) {
     }
 
     store.dispatch(setExchangeRates(exchangeRates));
+    store.dispatch(setIsLoadingById(["exchangeRates", false]));
   };
 }

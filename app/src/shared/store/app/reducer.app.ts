@@ -6,14 +6,16 @@ export type ExchangeRatesState = Record<string, number> & { _updatedAt: number }
 
 export type AppState = {
   isAuthenticated: boolean;
-  isLoading: boolean;
+  isAppLoading: boolean;
   exchangeRates: Maybe<ExchangeRatesState>;
+  isLoading: Record<string, boolean>;
 };
 
 const INITIAL_STATE: AppState = {
   isAuthenticated: false,
-  isLoading: true,
+  isAppLoading: true,
   exchangeRates: undefined,
+  isLoading: {},
 };
 
 const appSlice = createSlice({
@@ -25,16 +27,25 @@ const appSlice = createSlice({
       state.isAuthenticated = action.payload;
     },
     setIsAppLoading: (state, action) => {
-      state.isLoading = action.payload;
+      state.isAppLoading = action.payload;
     },
     setExchangeRates: (state, action) => {
       state.exchangeRates = action.payload;
     },
     updateExchangeRates: (state, action) => (state.exchangeRates = { ...state.exchangeRates, ...action.payload }),
+    setIsLoadingById: (state, action) => {
+      state.isLoading[action.payload[0]] = Boolean(action.payload[1]);
+    },
   },
 });
 
-export const { clearAppState, setIsAuthenticated, setIsAppLoading, setExchangeRates, updateExchangeRates } =
-  appSlice.actions;
+export const {
+  clearAppState,
+  setIsAuthenticated,
+  setIsAppLoading,
+  setExchangeRates,
+  updateExchangeRates,
+  setIsLoadingById,
+} = appSlice.actions;
 
 export const app = appSlice.reducer;

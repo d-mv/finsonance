@@ -76,6 +76,7 @@ export default defineConfig(({ mode }) => {
         "@assets": resolve(__dirname, "src", "assets"),
         "@api": resolve(__dirname, "src", "api"),
         "@services": resolve(__dirname, "src", "services"),
+        "@entities": resolve(__dirname, "src", "entities"),
         "@components": resolve(__dirname, "src", "shared", "components"),
         "@layouts": resolve(__dirname, "src", "layouts"),
         "@pages": resolve(__dirname, "src", "pages"),

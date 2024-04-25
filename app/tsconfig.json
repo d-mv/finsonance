@@ -42,6 +42,7 @@
       "@assets/*": ["src/assets/*"],
       "@api/*": ["src/api/*"],
       "@services/*": ["src/services/*"],
+      "@entities/*": ["src/entities/*"],
       "@components/*": ["src/shared/components/*"],
       "@layouts/*": ["src/layouts/*"],
       "@pages/*": ["src/pages/*"],

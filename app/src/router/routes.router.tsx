@@ -1,7 +1,7 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import { AppLayout } from "@layouts/index";
-import { Account, Dashboard, NotFound, loadDashboard } from "@pages/index";
+import { Account, Dashboard, NotFound, Transactions, loadDashboard } from "@pages/index";
 import { AppRoutes } from "./data.router";
 
 export const ROUTES: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
@@ -19,6 +19,11 @@ export const ROUTES: ReturnType<typeof createBrowserRouter> = createBrowserRoute
       {
         path: AppRoutes.ACCOUNT,
         Component: Account,
+        loader: loadDashboard,
+      },
+      {
+        path: AppRoutes.TRANSACTIONS,
+        Component: Transactions,
         loader: loadDashboard,
       },
       {
