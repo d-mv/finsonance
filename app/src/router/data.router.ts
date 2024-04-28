@@ -2,6 +2,7 @@ export enum AppRoutes {
   NOT_FOUND = "/not-found",
   DASHBOARD = "/dashboard",
   ACCOUNT = "/accounts/:id",
+  ACCOUNTS = "/accounts",
   TRANSACTIONS = "/transactions",
 }
 
@@ -17,7 +18,7 @@ export const NAVIGATION = [
   },
   {
     title: "Accounts",
-    path: AppRoutes.ACCOUNT,
+    path: AppRoutes.ACCOUNTS,
   },
   {
     title: "Transactions",

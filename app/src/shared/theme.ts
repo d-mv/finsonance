@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import { blueGrey, deepOrange, grey } from "@mui/material/colors";
 
 export const THEME = createTheme({
   typography: {
@@ -7,20 +8,22 @@ export const THEME = createTheme({
   },
   palette: {
     primary: {
-      main: "#4f6992",
+      light: blueGrey[300],
+      main: blueGrey[500],
+      dark: blueGrey[700],
+      contrastText: "#fff",
     },
     info: {
-      main: "#5cd85a",
+      main: deepOrange[500],
     },
-
     grey: {
-      200: "color-mix(in srgb, #d0d0d0, #fff 95%)",
-      300: "color-mix(in srgb, #d0d0d0, #fff 75%)",
-      400: "color-mix(in srgb, #d0d0d0, #fff 50%)",
-      500: "#d0d0d0",
-      600: "color-mix(in srgb, #d0d0d0, #000 25%)",
-      700: "color-mix(in srgb, #d0d0d0, #000 50%)",
-      800: "color-mix(in srgb, #d0d0d0, #000 75%)",
+      200: grey[200],
+      300: grey[300],
+      400: grey[400],
+      500: grey[500],
+      600: grey[600],
+      700: grey[700],
+      800: grey[800],
     },
     text: {
       primary: "#444",

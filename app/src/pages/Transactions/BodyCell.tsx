@@ -2,6 +2,7 @@ import { TableCell as MuiTableCell } from "@mui/material";
 import { AnyValue, makeMatch } from "@mv-d/toolbelt";
 import { toCurrency, toFinancial } from "@shared/formatters";
 import { EnhancedTransactionsItem } from "@shared/store/transactions";
+import { THEME } from "@shared/theme";
 import dayjs from "dayjs";
 import { path, toUpper } from "lodash/fp";
 import { useContextSelector } from "use-context-selector";
@@ -18,11 +19,16 @@ const MATCH_CELL_RENDER = makeMatch(
   (v: AnyValue) => v,
 );
 
-export function TableCell() {
-  const { isEditingId, setIsEditingId, tempEditValue, setTempEditValue, handlePersistentUpdate } = useContextSelector(
-    TransactionsContext,
-    c => c,
-  );
+export function BodyCell() {
+  const {
+    isEditingId,
+    setIsEditingId,
+    tempEditValue,
+    setTempEditValue,
+    handlePersistentUpdate,
+    updateNewTransaction,
+    newTrx,
+  } = useContextSelector(TransactionsContext, c => c);
 
   const row = useContextSelector(TransactionsRowContext, c => c.row);
 
@@ -30,18 +36,34 @@ export function TableCell() {
 
   const joinedId = `${row._id}-${cell.id}`;
 
-  if (isEditingId === joinedId) {
+  if (isEditingId === joinedId || row.isEditing) {
     return (
-      <input
-        autoFocus={true}
-        type='text'
+      <MuiTableCell
         key={cell.id}
-        value={tempEditValue || ""}
-        onKeyDown={e => {
-          if (e.code === "Enter") handlePersistentUpdate(row._id, cell.id);
+        align={cell.align}
+        sx={{
+          ...path("style", cell),
         }}
-        onChange={e => setTempEditValue(e.target.value)}
-      />
+      >
+        <input
+          id={cell.id}
+          autoFocus={true}
+          type='text'
+          key={cell.id}
+          value={row.isEditing ? path(cell.id, newTrx) : tempEditValue || ""}
+          onKeyDown={e => {
+            if (e.code === "Enter") handlePersistentUpdate(row._id, cell.id);
+          }}
+          onChange={e =>
+            row.isEditing ? updateNewTransaction(cell.id, e.target.value) : setTempEditValue(e.target.value)
+          }
+          style={{
+            border: 0,
+            backgroundColor: THEME.palette.grey[400],
+            paddingBlock: "1rem",
+          }}
+        />
+      </MuiTableCell>
     );
   }
 

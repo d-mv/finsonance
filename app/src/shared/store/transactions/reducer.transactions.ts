@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { Currency } from "@shared/data";
-
 export type TransactionsItem = {
   _id: string;
   amount: number;
   currency: string;
-  baseCurrency: Currency;
+  baseCurrency: string;
   inBaseCurrency: number;
   account_id: string;
   category_id?: string;
@@ -35,10 +33,16 @@ const transactionsSlice = createSlice({
         return { ...s, ...action.payload };
       }),
     deleteTransaactionById: (state, action) => state.filter(s => s._id !== action.payload),
+    addTransaction: (state, action) => [...state, action.payload],
   },
 });
 
-export const { clearTransactionsState, setTransactions, updateTransactionById, deleteTransaactionById } =
-  transactionsSlice.actions;
+export const {
+  clearTransactionsState,
+  setTransactions,
+  updateTransactionById,
+  deleteTransaactionById,
+  addTransaction,
+} = transactionsSlice.actions;
 
 export const transactions = transactionsSlice.reducer;

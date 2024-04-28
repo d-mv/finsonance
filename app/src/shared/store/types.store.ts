@@ -4,12 +4,14 @@ import { CONFIG } from "../../config";
 import { AnyValue } from "../../types";
 import { AccountsState } from "./accounts";
 import { AppState } from "./app";
+import { CurrenciesState } from "./currencies";
 import { TransactionsState } from "./transactions";
 
 export type State = {
   app: AppState;
   accounts: AccountsState;
   transactions: TransactionsState;
+  currencies: CurrenciesState;
 };
 
 export type Middleware = AnyValue;

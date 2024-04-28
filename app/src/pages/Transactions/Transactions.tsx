@@ -1,6 +1,12 @@
 import { Button, Table, TableContainer } from "@mui/material";
 import { nanoid } from "@reduxjs/toolkit";
-import { EnhancedTransactionsItem, getTransactionsToDisplay, updateTransactionById } from "@shared/store/transactions";
+import {
+  EnhancedTransactionsItem,
+  addTransaction,
+  getTransactionsToDisplay,
+  updateTransactionById,
+} from "@shared/store/transactions";
+import { omit } from "lodash/fp";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MaybeNull } from "../../types";
@@ -53,9 +59,14 @@ export default function Transactions() {
   const dispatch = useDispatch();
 
   function handlePersistentUpdate(rowId: string, cellId: string) {
-    setIsEditingId(null);
-    dispatch(updateTransactionById({ _id: rowId, [cellId]: tempEditValue }));
-    setTempEditValue(null);
+    if (newTrx) {
+      dispatch(addTransaction({ ...omit(["isEditing"], newTrx), _id: rowId }));
+      setNewTrx(null);
+    } else {
+      setIsEditingId(null);
+      dispatch(updateTransactionById({ _id: rowId, [cellId]: tempEditValue }));
+      setTempEditValue(null);
+    }
   }
 
   const createNewTrx = () => setNewTrx({ _id: nanoid(), isEditing: true } as EnhancedTransactionsItem);
@@ -84,6 +95,7 @@ export default function Transactions() {
         handlePersistentUpdate,
         createNewTrx,
         cells: CELLS,
+        newTrx,
       }}
     >
       <TableContainer ref={containerRef}>

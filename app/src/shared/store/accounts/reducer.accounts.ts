@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Currency } from "@shared/data";
-import { omit } from "lodash";
 
 export type AccountStateItem = {
   _id: string;
   label: string;
-  currency: Currency;
+  currency: string;
   balance: number;
+  type: "cash" | "bank" | "crypto" | "credit" | "investment";
+  _createdAt: number;
+  _updatedAt: number;
 };
 
 export type AccountsState = AccountStateItem[];
@@ -20,12 +21,11 @@ const accountsSlice = createSlice({
     clearAccountsState: () => INITIAL_STATE,
     setAccounts: (_, action) => action.payload,
     updateAccountById: (state, action) =>
-      state.map(account =>
-        account._id === action.payload._id ? { ...account, ...omit(["_id"], action.payload) } : account,
-      ),
+      state.map(account => (account._id === action.payload._id ? { ...account, ...action.payload } : account)),
+    addAccount: (state, action) => [...state, action.payload],
   },
 });
 
-export const { clearAccountsState, setAccounts, updateAccountById } = accountsSlice.actions;
+export const { clearAccountsState, addAccount, setAccounts, updateAccountById } = accountsSlice.actions;
 
 export const accounts = accountsSlice.reducer;

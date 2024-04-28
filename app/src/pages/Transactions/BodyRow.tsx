@@ -1,12 +1,28 @@
 import { TableRow as MuiTableRow } from "@mui/material";
 import { useContextSelector } from "use-context-selector";
-import { TableCell } from "./TableCell";
+import { BodyCell } from "./BodyCell";
 import { TransactionsCellContext, TransactionsContext, TransactionsRowContext } from "./context";
 
 export function BodyRow() {
   const { selectedIds, cells, toggleRowSelection } = useContextSelector(TransactionsContext, c => c);
 
   const row = useContextSelector(TransactionsRowContext, c => c.row);
+
+  function renderCells() {
+    if (!row.isEditing) {
+      return cells.map(cell => (
+        <TransactionsCellContext.Provider key={cell.id} value={{ cell }}>
+          <BodyCell />
+        </TransactionsCellContext.Provider>
+      ));
+    }
+
+    return cells.map(cell => (
+      <TransactionsCellContext.Provider key={cell.id} value={{ cell }}>
+        <BodyCell />
+      </TransactionsCellContext.Provider>
+    ));
+  }
 
   return (
     <MuiTableRow
@@ -18,11 +34,7 @@ export function BodyRow() {
       }}
       onClick={toggleRowSelection(row._id)}
     >
-      {cells.map(cell => (
-        <TransactionsCellContext.Provider key={cell.id} value={{ cell }}>
-          <TableCell />
-        </TransactionsCellContext.Provider>
-      ))}
+      {renderCells()}
     </MuiTableRow>
   );
 }
