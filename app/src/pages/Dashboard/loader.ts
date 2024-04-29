@@ -3,9 +3,15 @@ import { buildArrayWith } from "@mv-d/toolbelt";
 import { nanoid } from "@reduxjs/toolkit";
 
 import { Currency } from "@shared/data";
-import { AccountStateItem, STORE, setAccounts } from "@shared/store";
-import { setCurrencies } from "@shared/store/currencies";
-import { TransactionsItem, setTransactions } from "@shared/store/transactions";
+import {
+  AccountStateItem,
+  STORE,
+  TransactionsItem,
+  setAccounts,
+  setCategories,
+  setCurrencies,
+  setTransactions,
+} from "@shared/store";
 import { roundToTwoDecimals } from "@shared/utils";
 import dayjs from "dayjs";
 import { sample, toUpper } from "lodash";
@@ -40,6 +46,15 @@ export async function loadDashboard() {
 
   STORE.dispatch(setAccounts(accounts));
 
+  const categories = buildArrayWith(Math.round(Math.random() * 10) || 1, () => 0).map((_, i) => ({
+    _id: String(`category-${i}`),
+    label: faker.commerce.department(),
+    grouping_1: faker.commerce.department(),
+    grouping_2: faker.commerce.department(),
+  }));
+
+  STORE.dispatch(setCategories(categories));
+
   STORE.dispatch(
     setTransactions(
       buildArrayWith(Math.round(Math.random() * 100) || 1, () => 0).map(
@@ -51,7 +66,7 @@ export async function loadDashboard() {
             baseCurrency: sample(currencies.map(c => c._id)),
             inBaseCurrency: roundToTwoDecimals(faker.number.float({ min: 10, max: 100_000 }) * 100),
             account_id: sample(accounts)?._id || "",
-            category_id: nanoid(),
+            category_id: sample(categories)?._id || "",
             category_label: faker.commerce.department(),
             date: dayjs(faker.date.anytime()).valueOf(),
             payee_id: nanoid(),

@@ -1,4 +1,4 @@
-import { Header } from "@entities/index";
+import { Footer, Header } from "@entities/index";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
@@ -9,7 +9,7 @@ export default function AppLayout() {
       <Box sx={{ flexGrow: 1, overflowX: "scroll" }}>
         <Outlet />
       </Box>
-      <div>footer</div>
+      <Footer />
     </Box>
   );
 }

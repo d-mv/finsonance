@@ -3,6 +3,7 @@ import { Tuple, configureStore } from "@reduxjs/toolkit";
 
 import { accounts } from "./accounts";
 import { app } from "./app";
+import { categories } from "./categories";
 import { currencies } from "./currencies";
 import { apiMiddleware } from "./middlewares";
 import { transactions } from "./transactions";
@@ -14,8 +15,8 @@ export const STORE = configureStore({
     accounts,
     transactions,
     currencies,
+    categories,
   },
-  // enhancers: () => new Tuple<AnyValue>(devToolsEnhancer()),
   middleware: () => new Tuple<Middleware>(apiMiddleware),
   devTools: { name: "Finsonance", shouldCatchErrors: true, trace: true, traceLimit: 25, features: { test: true } },
 });

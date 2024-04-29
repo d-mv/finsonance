@@ -9,7 +9,6 @@ import { Formik, FormikHelpers } from "formik";
 import { isNil, path } from "lodash/fp";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import CurrencySelector from "../../shared/components/CurrencySelector";
 
 const REQUIRED_FIELDS = ["label", "balance", "currency", "type"];
 

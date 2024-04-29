@@ -13,9 +13,7 @@ type TransactionsContextType = {
   selectedIds: string[];
   toggleRowSelection: (id: string) => () => void;
   handlePersistentUpdate: (rowId: string, cellId: string) => void;
-  createNewTrx: () => void;
   cells: ScenarioCell[];
-  newTrx: MaybeNull<EnhancedTransactionsItem>;
 };
 
 export const TransactionsContext = createContext<TransactionsContextType>({} as TransactionsContextType);

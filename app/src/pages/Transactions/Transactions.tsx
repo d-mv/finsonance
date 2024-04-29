@@ -1,17 +1,14 @@
-import { Button, Table, TableContainer } from "@mui/material";
-import { nanoid } from "@reduxjs/toolkit";
-import {
-  EnhancedTransactionsItem,
-  addTransaction,
-  getTransactionsToDisplay,
-  updateTransactionById,
-} from "@shared/store/transactions";
-import { omit } from "lodash/fp";
+import { Table, TableContainer } from "@mui/material";
+import { getTransactionsToDisplay, updateTransactionById } from "@shared/store/transactions";
+import { pick } from "lodash/fp";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useContextSelector } from "use-context-selector";
+import { AppContext, Modals } from "../../context";
 import { MaybeNull } from "../../types";
 import { Body } from "./Body";
 import { Header } from "./Header";
+import { TransactionForm } from "./TransactionForm";
 import { TransactionsContext } from "./context";
 import { DataType, ScenarioCell } from "./types";
 
@@ -34,17 +31,16 @@ const CELLS: ScenarioCell[] = [
 export default function Transactions() {
   const transactions = useSelector(getTransactionsToDisplay);
 
+  const { modal } = useContextSelector(AppContext, pick("modal"));
+
+  // eslint-disable-next-line no-console
+  console.log(modal);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   // const isEditingId = useRef<MaybeNull<string>>(null);
 
   const [isEditingId, setIsEditingId] = useState<MaybeNull<string>>(null);
-
-  const [newTrx, setNewTrx] = useState<MaybeNull<EnhancedTransactionsItem>>(null);
-
-  function updateNewTransaction(cellId: string, value: string) {
-    setNewTrx({ ...newTrx, [cellId]: value } as EnhancedTransactionsItem);
-  }
 
   const [tempEditValue, setTempEditValue] = useState<MaybeNull<string>>(null);
 
@@ -59,17 +55,10 @@ export default function Transactions() {
   const dispatch = useDispatch();
 
   function handlePersistentUpdate(rowId: string, cellId: string) {
-    if (newTrx) {
-      dispatch(addTransaction({ ...omit(["isEditing"], newTrx), _id: rowId }));
-      setNewTrx(null);
-    } else {
-      setIsEditingId(null);
-      dispatch(updateTransactionById({ _id: rowId, [cellId]: tempEditValue }));
-      setTempEditValue(null);
-    }
+    setIsEditingId(null);
+    dispatch(updateTransactionById({ _id: rowId, [cellId]: tempEditValue }));
+    setTempEditValue(null);
   }
-
-  const createNewTrx = () => setNewTrx({ _id: nanoid(), isEditing: true } as EnhancedTransactionsItem);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -81,21 +70,24 @@ export default function Transactions() {
     return () => containerRef.current?.removeEventListener("keydown", handleKeys);
   }, []);
 
+  function renderTransactionForm() {
+    if (modal !== Modals.ADD_TRANSACTION) return null;
+
+    return <TransactionForm />;
+  }
+
   return (
     <TransactionsContext.Provider
       value={{
-        transactions: newTrx ? [...transactions, newTrx] : transactions,
+        transactions,
         isEditingId,
         setIsEditingId,
-        updateNewTransaction,
         tempEditValue,
         setTempEditValue,
         selectedIds,
         toggleRowSelection,
         handlePersistentUpdate,
-        createNewTrx,
         cells: CELLS,
-        newTrx,
       }}
     >
       <TableContainer ref={containerRef}>
@@ -104,7 +96,7 @@ export default function Transactions() {
           <Body />
         </Table>
       </TableContainer>
-      <Button onClick={createNewTrx}>Add new</Button>
+      {renderTransactionForm()}
     </TransactionsContext.Provider>
   );
 }
