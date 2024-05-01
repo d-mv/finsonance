@@ -6,6 +6,7 @@ import { AccountsState } from "./accounts";
 import { AppState } from "./app";
 import { CategoriesState } from "./categories";
 import { CurrenciesState } from "./currencies";
+import { PayeesState } from "./payees";
 import { TransactionsState } from "./transactions";
 
 export type State = {
@@ -14,6 +15,7 @@ export type State = {
   transactions: TransactionsState;
   currencies: CurrenciesState;
   categories: CategoriesState;
+  payees: PayeesState;
 };
 
 export type Middleware = AnyValue;

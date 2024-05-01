@@ -1,19 +1,22 @@
+import { Fn, SingletonFn } from "@mv-d/toolbelt";
 import { EnhancedTransactionsItem } from "@shared/store/transactions";
 import { MaybeNull } from "src/types";
 import { createContext } from "use-context-selector";
-import { ScenarioCell } from "./types";
+import { Context, ScenarioCell } from "./types";
 
 type TransactionsContextType = {
   transactions: EnhancedTransactionsItem[];
   isEditingId: MaybeNull<string>;
-  setIsEditingId: (arg0: MaybeNull<string>) => void;
-  updateNewTransaction: (cellId: string, value: string) => void;
+  setIsEditingId: SingletonFn<MaybeNull<string>>;
   tempEditValue: MaybeNull<string>;
-  setTempEditValue: (arg0: MaybeNull<string>) => void;
+  setTempEditValue: SingletonFn<MaybeNull<string>>;
   selectedIds: string[];
-  toggleRowSelection: (id: string) => () => void;
+  toggleSelection: SingletonFn<string, Fn>;
   handlePersistentUpdate: (rowId: string, cellId: string) => void;
   cells: ScenarioCell[];
+  clearSelection: Fn;
+  selectAll: Fn;
+  areAllSelected: boolean;
 };
 
 export const TransactionsContext = createContext<TransactionsContextType>({} as TransactionsContextType);
@@ -40,6 +43,8 @@ TransactionsCellContext.displayName = "TransactionsCellContext";
 
 type TransactionsRowContextType = {
   row: EnhancedTransactionsItem;
+  ctx: Context;
+  isSelected: boolean;
 };
 
 export const TransactionsRowContext = createContext<TransactionsRowContextType>({} as TransactionsRowContextType);

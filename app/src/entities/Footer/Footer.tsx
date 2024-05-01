@@ -5,24 +5,30 @@ import { useContextSelector } from "use-context-selector";
 import { AppContext, Modals } from "../../context";
 
 export default function Footer() {
-  const { setModal } = useContextSelector(AppContext, pick("setModal"));
+  const { setModal } = useContextSelector(AppContext, pick(["setModal"]));
 
   const pathname = useLocation().pathname;
 
   function renderButtons() {
+    const buttons = [];
+
     switch (pathname) {
       case "/transactions":
-        return (
+        buttons.push(
           <>
             <Button variant='contained' onClick={() => setModal(Modals.ADD_TRANSACTION)}>
               Add transaction
             </Button>
             {/* <button>Remove selected</button> */}
-          </>
+          </>,
         );
+
+        break;
       default:
-        return null;
     }
+
+    return buttons;
+    // return interleave(buttons, <Box sx={{ width: "1rem" }} />);
   }
 
   return (
@@ -37,6 +43,7 @@ export default function Footer() {
         width: "100%",
         alignItems: "center",
         paddingInline: "1rem",
+        gap: "1rem",
       }}
     >
       {renderButtons()}

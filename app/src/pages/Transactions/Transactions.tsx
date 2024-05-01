@@ -1,7 +1,7 @@
 import { Table, TableContainer } from "@mui/material";
 import { getTransactionsToDisplay, updateTransactionById } from "@shared/store/transactions";
 import { pick } from "lodash/fp";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useContextSelector } from "use-context-selector";
 import { AppContext, Modals } from "../../context";
@@ -13,6 +13,7 @@ import { TransactionsContext } from "./context";
 import { DataType, ScenarioCell } from "./types";
 
 const CELLS: ScenarioCell[] = [
+  { label: "_select", align: "center", id: "_select", type: DataType.CHECKBOX },
   { label: "Date", align: "left", type: DataType.DATE, id: "date" },
   { label: "Payee", align: "left", id: "payee_label" },
   { label: "Category", align: "left", id: "category_label" },
@@ -31,10 +32,48 @@ const CELLS: ScenarioCell[] = [
 export default function Transactions() {
   const transactions = useSelector(getTransactionsToDisplay);
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  function toggleSelection(id: string) {
+    return function onClick() {
+      // eslint-disable-next-line no-console
+      console.log("toggleSelection", id);
+      setSelectedIds(selectedIds.includes(id) ? selectedIds.filter(i => i !== id) : [...selectedIds, id]);
+    };
+  }
+
+  const clearSelection = () => {
+    // eslint-disable-next-line no-console
+    console.log("clearSelection");
+    setSelectedIds([]);
+  };
+
+  const selectAll = () =>
+    setSelectedIds(_ => {
+      // eslint-disable-next-line no-console
+      console.log(_, transactions);
+      return [..._, ...transactions.map(t => t._id)];
+    });
+
+  const areAllSelected = useMemo(() => transactions.length === selectedIds.length, [transactions, selectedIds]);
+
+  useEffect(() => {
+    // setSelectedIds(transactions.map(t => t._id));
+    // eslint-disable-next-line no-console
+    console.log("@@@", selectedIds);
+  }, [selectedIds]);
+
+  useEffect(() => {
+    return () => {
+      // eslint-disable-next-line no-console
+      console.log("unmount");
+      clearSelection();
+    };
+  }, []);
+
   const { modal } = useContextSelector(AppContext, pick("modal"));
 
-  // eslint-disable-next-line no-console
-  console.log(modal);
+  // console.log(modal);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -43,14 +82,6 @@ export default function Transactions() {
   const [isEditingId, setIsEditingId] = useState<MaybeNull<string>>(null);
 
   const [tempEditValue, setTempEditValue] = useState<MaybeNull<string>>(null);
-
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  function toggleRowSelection(id: string) {
-    return function onClick() {
-      setSelectedIds(selectedIds.includes(id) ? selectedIds.filter(i => i !== id) : [...selectedIds, id]);
-    };
-  }
 
   const dispatch = useDispatch();
 
@@ -84,10 +115,13 @@ export default function Transactions() {
         setIsEditingId,
         tempEditValue,
         setTempEditValue,
-        selectedIds,
-        toggleRowSelection,
         handlePersistentUpdate,
         cells: CELLS,
+        selectedIds,
+        toggleSelection,
+        clearSelection,
+        selectAll,
+        areAllSelected,
       }}
     >
       <TableContainer ref={containerRef}>

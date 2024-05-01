@@ -4,39 +4,53 @@ import { toCurrency, toFinancial } from "@shared/formatters";
 import { EnhancedTransactionsItem } from "@shared/store/transactions";
 import { THEME } from "@shared/theme";
 import dayjs from "dayjs";
-import { path, toUpper } from "lodash/fp";
+import { path, pick, toUpper } from "lodash/fp";
+import { CSSProperties, JSX } from "react";
+import { CiSquareCheck, CiStop1 } from "react-icons/ci";
 import { useContextSelector } from "use-context-selector";
 import { TransactionsCellContext, TransactionsContext, TransactionsRowContext } from "./context";
-import { DataType } from "./types";
+import { Context, DataType } from "./types";
 
-const MATCH_CELL_RENDER = makeMatch(
+const SELECTION_BUTTON_STYLE: CSSProperties = {
+  height: "2rem",
+  width: "2rem",
+};
+
+type MatchProps = {
+  v: AnyValue;
+  row: EnhancedTransactionsItem;
+  ctx: Context;
+  isSelected: boolean;
+};
+
+const MATCH_CELL_RENDER = makeMatch<(props: MatchProps) => JSX.Element | string>(
   {
-    [DataType.DATE]: (v: AnyValue) => dayjs(v).format("DD/MM/YYYY"),
-    [DataType.FLOAT]: (v: AnyValue) => toFinancial(String(v)),
-    [DataType.CURRENCY]: (v: AnyValue) => toUpper(String(v)),
-    [DataType.BASE_CURRENCY]: (v: AnyValue, row: EnhancedTransactionsItem) => toCurrency(String(v), row.baseCurrency),
+    [DataType.CHECKBOX]: ({ isSelected }) =>
+      isSelected ? <CiSquareCheck style={SELECTION_BUTTON_STYLE} /> : <CiStop1 style={SELECTION_BUTTON_STYLE} />,
+    [DataType.DATE]: ({ v }) => dayjs(v).format("DD/MM/YYYY"),
+    [DataType.FLOAT]: ({ v }) => toFinancial(String(v)),
+    [DataType.CURRENCY]: ({ v }) => toUpper(String(v)),
+    [DataType.BASE_CURRENCY]: ({ v, row, ctx }) =>
+      toCurrency(String(v), ctx.currencies.find(c => c._id === row.base_currency_id)?.short),
   },
-  (v: AnyValue) => v,
+  ({ v }) => v,
 );
 
 export function BodyCell() {
-  const {
-    isEditingId,
-    setIsEditingId,
-    tempEditValue,
-    setTempEditValue,
-    handlePersistentUpdate,
-    updateNewTransaction,
-    newTrx,
-  } = useContextSelector(TransactionsContext, c => c);
+  const { isEditingId, setIsEditingId, tempEditValue, setTempEditValue, handlePersistentUpdate } = useContextSelector(
+    TransactionsContext,
+    c => c,
+  );
 
-  const row = useContextSelector(TransactionsRowContext, c => c.row);
+  const ctx = useContextSelector(TransactionsRowContext, c => c.ctx);
+
+  const { row, isSelected } = useContextSelector(TransactionsRowContext, pick(["row", "isSelected"]));
 
   const cell = useContextSelector(TransactionsCellContext, c => c.cell);
 
   const joinedId = `${row._id}-${cell.id}`;
 
-  if (isEditingId === joinedId || row.isEditing) {
+  if (isEditingId === joinedId) {
     return (
       <MuiTableCell
         key={cell.id}
@@ -50,13 +64,11 @@ export function BodyCell() {
           autoFocus={true}
           type='text'
           key={cell.id}
-          value={row.isEditing ? path(cell.id, newTrx) : tempEditValue || ""}
+          value={tempEditValue || ""}
           onKeyDown={e => {
             if (e.code === "Enter") handlePersistentUpdate(row._id, cell.id);
           }}
-          onChange={e =>
-            row.isEditing ? updateNewTransaction(cell.id, e.target.value) : setTempEditValue(e.target.value)
-          }
+          onChange={e => setTempEditValue(e.target.value)}
           style={{
             border: 0,
             backgroundColor: THEME.palette.grey[400],
@@ -77,7 +89,7 @@ export function BodyCell() {
         setTempEditValue(path(cell.id, row));
       }}
     >
-      {MATCH_CELL_RENDER[cell.type || ""]!(path(cell.id, row), row)}
+      {MATCH_CELL_RENDER[cell.type || ""]!({ v: path(cell.id, row), row, ctx, isSelected })}
     </MuiTableCell>
   );
 }

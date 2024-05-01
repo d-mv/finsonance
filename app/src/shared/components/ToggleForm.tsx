@@ -26,7 +26,13 @@ export default function ToggleForm({ id, buttons, label, required }: Props) {
 
   function renderToggleButton(button: ToggleButtonItem) {
     return (
-      <ToggleButton key={button.label} id={button.label} value={button.value} sx={{ padding: ".8rem 1rem" }}>
+      <ToggleButton
+        key={button.label}
+        id={button.label}
+        value={button.value}
+        sx={{ padding: ".8rem 1rem" }}
+        type='button'
+      >
         <Typography variant='caption'> {button.renderFn ? button.renderFn() : button.label}</Typography>
       </ToggleButton>
     );

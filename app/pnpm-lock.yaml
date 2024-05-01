@@ -21,8 +21,8 @@ dependencies:
     specifier: 5.15.10
     version: 5.15.10(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@mv-d/toolbelt':
-    specifier: 7.0.0
-    version: 7.0.0
+    specifier: 7.1.0
+    version: 7.1.0
   '@reduxjs/toolkit':
     specifier: 2.2.1
     version: 2.2.1(react-redux@9.1.0)(react@18.2.0)
@@ -1054,8 +1054,8 @@ packages:
       react-is: 18.2.0
     dev: false
 
-  /@mv-d/toolbelt@7.0.0:
-    resolution: {integrity: sha512-AirNtwb60u++qtiXHnwnS8VShmlVIR9vj+K/CFrj3brAVswibPXqiEMD+1Ku2RqymIJnOVU/oLdqqqPIU7sR6g==}
+  /@mv-d/toolbelt@7.1.0:
+    resolution: {integrity: sha512-ydjBVXNKUbv2nBveD3OU/VcVKoFidfpcPbI9JxxidNTsme+lW8kcGkaqjWE9TkZLG+D2lM7iExnatdRGhdouIg==}
     dependencies:
       '@sniptt/monads': 0.5.10
       '@types/lodash': 4.17.0

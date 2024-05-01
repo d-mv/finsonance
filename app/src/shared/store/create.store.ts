@@ -6,6 +6,7 @@ import { app } from "./app";
 import { categories } from "./categories";
 import { currencies } from "./currencies";
 import { apiMiddleware } from "./middlewares";
+import { payees } from "./payees";
 import { transactions } from "./transactions";
 import { Middleware } from "./types.store";
 
@@ -16,6 +17,7 @@ export const STORE = configureStore({
     transactions,
     currencies,
     categories,
+    payees,
   },
   middleware: () => new Tuple<Middleware>(apiMiddleware),
   devTools: { name: "Finsonance", shouldCatchErrors: true, trace: true, traceLimit: 25, features: { test: true } },

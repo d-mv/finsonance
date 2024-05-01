@@ -16,4 +16,8 @@ export const ButtonGroupForm = lazy(() => import("./ButtonGroupForm"));
 
 export const ConfirmationDialog = lazy(() => import("./ConfirmationDialog"));
 
+export const CalculateInBaseCurrencyForm = lazy(() => import("./CalculateInBaseCurrencyForm"));
+
+export const SelectorForm = lazy(() => import("./SelectorForm"));
+
 export * from "./Toggle";

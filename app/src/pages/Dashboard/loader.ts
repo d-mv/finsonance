@@ -5,11 +5,13 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Currency } from "@shared/data";
 import {
   AccountStateItem,
+  PayeeStateItem,
   STORE,
   TransactionsItem,
   setAccounts,
   setCategories,
   setCurrencies,
+  setPayees,
   setTransactions,
 } from "@shared/store";
 import { roundToTwoDecimals } from "@shared/utils";
@@ -55,6 +57,14 @@ export async function loadDashboard() {
 
   STORE.dispatch(setCategories(categories));
 
+  const payees: PayeeStateItem[] = buildArrayWith(Math.round(Math.random() * 10) || 1, () => 0).map((_, i) => ({
+    _id: String(`payee-${i}`),
+    label: faker.company.name(),
+    grouping_1: faker.commerce.department(),
+  }));
+
+  STORE.dispatch(setPayees(payees));
+
   STORE.dispatch(
     setTransactions(
       buildArrayWith(Math.round(Math.random() * 100) || 1, () => 0).map(
@@ -62,15 +72,15 @@ export async function loadDashboard() {
           ({
             _id: String(`trx-${i}`),
             amount: roundToTwoDecimals(faker.number.float({ min: 10, max: 100_000 }) * 100),
-            currency: sample(currencies.map(c => c._id)),
-            baseCurrency: sample(currencies.map(c => c._id)),
-            inBaseCurrency: roundToTwoDecimals(faker.number.float({ min: 10, max: 100_000 }) * 100),
+            currency_id: sample(currencies.map(c => c._id)),
+            base_currency_id: sample(currencies.map(c => c._id)),
+            in_base_currency: roundToTwoDecimals(faker.number.float({ min: 10, max: 100_000 }) * 100),
             account_id: sample(accounts)?._id || "",
             category_id: sample(categories)?._id || "",
             category_label: faker.commerce.department(),
             date: dayjs(faker.date.anytime()).valueOf(),
-            payee_id: nanoid(),
-            payee_label: faker.company.name(),
+            payee_id: sample(payees)?._id || "",
+            payee_label: sample(payees)?.label || "",
           }) as TransactionsItem,
       ),
     ),

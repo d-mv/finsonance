@@ -3,11 +3,12 @@ function d(m) {
 
   let result = m;
 
-  if (typeof result === "string") {
+  if (typeof result === 'string') {
     try {
       result = JSON.parse(result);
     } catch (e) {
-      console.error("Error parsing message", m);
+      // eslint-disable-next-line no-console -- required
+      console.error('Error parsing message', m);
     }
   }
 
@@ -22,21 +23,21 @@ function logMessage(detail) {
 
     if (Object.keys(data).length === 1 && data.message) {
       // eslint-disable-next-line no-console -- required
-      console.log(area, ">>", data.message);
+      console.log(area, '>>', data.message);
     }
     // eslint-disable-next-line no-console -- required
-    else console.log(area, ">>", data);
+    else console.log(area, '>>', data);
   }
 }
 
 function logger(enable = true) {
   if (enable) {
-    globalThis.document.addEventListener("log", data => logMessage(data.detail));
-    globalThis.console.log("Logging enabled");
+    globalThis.document.addEventListener('log', data => logMessage(data.detail));
+    globalThis.console.log('Logging enabled');
   } else {
-    globalThis.document.removeEventListener("log", data => logMessage(data.detail));
+    globalThis.document.removeEventListener('log', data => logMessage(data.detail));
     // eslint-disable-next-line no-console -- required
-    console.log("Logging disabled");
+    console.log('Logging disabled');
   }
 }
 

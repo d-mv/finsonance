@@ -11,3 +11,5 @@ export * from "./currencies";
 export * from "./transactions";
 
 export * from "./categories";
+
+export * from "./payees";

@@ -1,3 +1,4 @@
+import { AccountsState, CurrenciesState } from "@shared/store";
 import { CSSProperties } from "react";
 
 export enum DataType {
@@ -5,6 +6,7 @@ export enum DataType {
   FLOAT = "float",
   CURRENCY = "currency",
   BASE_CURRENCY = "baseCurrency",
+  CHECKBOX = "checkbox",
 }
 
 export type ScenarioCell = {
@@ -13,4 +15,9 @@ export type ScenarioCell = {
   type?: DataType;
   id: string;
   style?: CSSProperties;
+};
+
+export type Context = {
+  accounts: AccountsState;
+  currencies: CurrenciesState;
 };
